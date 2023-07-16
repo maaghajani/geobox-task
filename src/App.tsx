@@ -1,25 +1,43 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useState} from 'react';
+
+import {Attribute, Main} from './components/Maps/Main'
+
+import { Layout, Menu , Watermark} from 'antd';
+import {SearchBox} from "./components/Search/SearchBox";
+import {ListItems} from "./components/ListItem/ListItems";
+import GeoJson, {Point} from "geojson";
+
+const { Sider, Content } = Layout;
+
+
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+const [searchCity , setSearchCity] = useState('')
+    const [cities, setCities] =
+        useState<GeoJson.FeatureCollection<Point, Attribute> | undefined>(undefined);
+        const [selectedId , setSelectedId] = useState<number | undefined>(undefined)
+    return (
+        <Watermark
+            content="GeoBox"
+            height={80}
+            width={100}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+            <Layout dir='rtl' style={{ minHeight: '100vh' }}>
+                <Sider    theme='light' dir='rtl' width='300px'
+
+                >
+
+                    <SearchBox setSearchCityName={setSearchCity}/>
+                    <ListItems setCitySelectedId={setSelectedId}  setMapCities={setCities} searchCity={searchCity}/>
+                    <Menu theme='light' direction='rtl' />
+                </Sider>
+                <Layout>
+                    <Content>
+                       <Main selectCityId={selectedId!} cities={cities!} />
+                    </Content>
+                </Layout>
+            </Layout>
+        </Watermark>
   );
 }
 
